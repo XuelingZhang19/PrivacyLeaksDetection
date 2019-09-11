@@ -9,7 +9,7 @@ APKpath = "/home/xueling/researchProjects/sourceDetection/apk_org/"
 # smaliPath = "/home/xueling/apkAnalysis/invokeDetection/smalis/"
 decodeFilePath = "/home/xueling/researchProjects/sourceDetection/decodeFile/"
 
-111
+1112222
 
 apkNameList = []
 
