@@ -3,7 +3,7 @@
 import os
 import commands
 
-11111
+
 APKpath = "/home/xueling/researchProjects/sourceDetection/apk_org/"
 # apkPath = "/home/xueling/apkAnalysis/invokeDetection/apks/"
 # smaliPath = "/home/xueling/apkAnalysis/invokeDetection/smalis/"
