@@ -13,10 +13,14 @@ i = 1
 for file in os.listdir(rebuildApkPath):
     if os.path.isfile(os.path.join(rebuildApkPath, file)):
         # key = file[:-4] + ".keystore"
-        key = file + ".keystore"
-        cmd = "jarsigner -verbose -keystore %s%s -storepass 123456 -signedjar %s%s %s%s abc.keystore" %(keyPath, key,apk_signedPath,file, rebuildApkPath, file)
-        print cmd
-        os.system(cmd)
+        if file in os.listdir(apk_signedPath):
+            print file + ' exists !!!'
+            continue
+        else:
+            key = file + ".keystore"
+            cmd = "jarsigner -verbose -keystore %s%s -storepass 123456 -signedjar %s%s %s%s abc.keystore" %(keyPath, key,apk_signedPath,file, rebuildApkPath, file)
+            print cmd
+            os.system(cmd)
 
         # child = pexpect.spawn(cmd, logfile = sys.stdout)
         #

@@ -6,10 +6,10 @@ import re
 
 
 
-def convert(log):
+def convert(apk):
 
-    sigOrgPath = methodPath + log
-    apk = log[:-4]
+    sigOrgPath = methodPath + apk
+    # apk = log[:-4]
     print apk
     sigOrgs = open(sigOrgPath).readlines()
     decodeFilePath = "/home/xueling/researchProjects/sourceDetection/decodeFile/"
@@ -117,9 +117,9 @@ methodPath = "/home/xueling/researchProjects/sourceDetection/methods/"
 apks = commands.getoutput('ls ' + methodPath).split('\n')
 i = 1
 for apk in apks:
-    print str(i) + "====================" + apk
     # apk = apk.strip()
-    if "temp" in apk:
+    if "com.gotv.nflgamecenter.us" in apk:
+        print str(i) + "====================" + apk
         convert(apk)
        # i += 1
 

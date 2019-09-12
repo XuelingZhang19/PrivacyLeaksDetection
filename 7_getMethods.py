@@ -101,5 +101,5 @@ def findMethod(log):
 logs = commands.getoutput('ls ' + logPath).split('\n')
 print logs
 for log in logs:
-    if "temp" in log:
+    if "com.gotv.nflgamecenter.us" in log:
         findMethod(log)

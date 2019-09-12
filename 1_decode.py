@@ -24,7 +24,7 @@ def decode():
     for apk in apks:
         # decompile to smaliPath
         print i
-        if apk in files:
+        if apk[:-4] in files:
             print apk
             print "exists!!!"
             i += 1

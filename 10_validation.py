@@ -1,5 +1,5 @@
 import commands
-apk = "com.contextlogic.wish"
+apk = "com.gotv.nflgamecenter.us.lite"
 analysisResultPath = "/home/xueling/researchProjects/sourceDetection/tainAnalysis-newSource/"
 # analysisResultPath = "/Users/xueling/Downloads/"
 
@@ -20,10 +20,6 @@ for line in open(method).readlines():
 validLeaksPath = "/home/xueling/researchProjects/sourceDetection/validLeaks/"
 
 leaks_org = open(analysisResultPath + apk).readlines()
-
-
-
-
 
 
 class SourceLine():             #flag: 1-toString, 0-resourceMethod, 2-sinkMethod
@@ -89,6 +85,7 @@ def validation():
 
 def checkToString(signatrue):   # check if there exists more than one invocation of this method with different value
     log = logPath + apk
+    print log
     if signatrue in methods:         # make sure its the new source we found
         cmd = 'grep ' + signatrue + ' ' + log + ' -B 1 > ' + temp
         commands.getoutput(cmd)

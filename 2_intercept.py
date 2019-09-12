@@ -1,5 +1,9 @@
 import os
 import re
+
+rebuildApkPath = "/home/xueling/researchProjects/sourceDetection/rebuildApk/"
+
+
 def instrument(method):
     localsNumber = 0
     locals_index = 0
@@ -52,29 +56,6 @@ def instrument(method):
             # print "return index: %d" %i
             returnVar = line.split()[1]
 
-            # if flag_moreReturns == 0:
-
-            # text_toBeAdd_cond = "    if-eqz " + returnVar + ", :cond_returnStringDetection" + str(cond_index)
-            # newMethod.append(text_toBeAdd_cond)
-            #
-            # text_toBeAdd_tag = "    const-string " + v1 + ", \"Return string detection printStackTrace and parameter:\""
-            # newMethod.append(text_toBeAdd_tag)
-            #
-            # text_toBeAdd_s4 = "    invoke-static{" + v1 + "," + returnVar + "},Landroid/util/Log;->i(Ljava/lang/String;Ljava/lang/String;)I"
-            # newMethod.append(text_toBeAdd_s4)
-            #
-            # text_toBeAdd_s1 = "    new-instance " + v2 + ", Ljava/lang/Exception;"
-            # newMethod.append(text_toBeAdd_s1)
-            #
-            # text_toBeAdd_s2 = "    invoke-direct {" + v2 + "," + v1 + "}, Ljava/lang/Exception;-><init>(Ljava/lang/String;)V"
-            # newMethod.append(text_toBeAdd_s2)
-            #
-            # text_toBeAdd_s3 = "    invoke-virtual {" + v2 + "}, Ljava/lang/Exception;->printStackTrace()V"
-            # newMethod.append(text_toBeAdd_s3)
-            #
-            # text_toBeAdd_s5 = "    :cond_returnStringDetection" + str(cond_index) + "\n"
-            # newMethod.append(text_toBeAdd_s5)
-
 
             text_toBeAdd_cond = "    if-eqz " + returnVar + ", :cond_returnStringDetection" + str(cond_index)
             newMethod.append(text_toBeAdd_cond)
@@ -115,14 +96,14 @@ def instrument(method):
 
 
 
-def stringReturnDetection():
+def stringReturnDetection(apk):
     apkPath = "/home/xueling/researchProjects/sourceDetection/decodeFile/"
     flag = 0
 
     v1 = " "
     v2 = " "
 
-    cmd = "find %s -iname *.smali " % (apkPath)
+    cmd = "find %s -iname *.smali " % (apkPath + apk)
     paths = os.popen(cmd).readlines()
 
     print str(len(paths)) + " smali files found!"
@@ -152,8 +133,8 @@ def stringReturnDetection():
                 continue
 
             if ".method" in line and ")Ljava/lang/String;" in line:  #  method return string
-                print path
-                print "%s" % line
+                # print path
+                # print "%s" % line
                 flag = 1
                 method.append(line)
                 continue
@@ -181,4 +162,13 @@ def stringReturnDetection():
             fw.write(line + '\n')
 
 # stringArgumentDetection()
-stringReturnDetection()
+
+decodePath = "/home/xueling/researchProjects/sourceDetection/decodeFile/"
+files = os.listdir(rebuildApkPath)
+
+for apk in os.listdir(decodePath):
+    if apk + '.apk' in files:
+        print "exists!!!"
+
+    else:
+        stringReturnDetection(apk)

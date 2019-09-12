@@ -13,7 +13,7 @@ for file in os.listdir(decodeFilePath):
     if os.path.isfile(os.path.join(decodeFilePath, file)):
         continue
 
-    if file in os.listdir(rebuildApkPath):
+    if file + '.apk' in os.listdir(rebuildApkPath):
         print "Exists!!!!"
 
     else:
