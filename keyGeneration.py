@@ -8,22 +8,22 @@ rebuildApkPath = "/home/xueling/researchProjects/sourceDetection/rebuildApk/"
 keyPath = "/home/xueling/researchProjects/sourceDetection/keys/"
 apkNameList = []
 
-apks = commands.getoutput('ls ' + rebuildApkPath).split('\n')
-
-for line in apks:
-    line = line.strip()
-    apkNameList.append(line)
-print len(apkNameList)
+# apks = commands.getoutput('ls ' + rebuildApkPath).split('\n')
+#
+# for line in apks:
+#     line = line.strip()
+#     apkNameList.append(line)
+# print len(apkNameList)
 
 i = 1
 files = os.listdir(keyPath)
-for line in apkNameList:
-    print i
-    line = line + ".keystore"
-    if line in files:
-        print "%s exists!!!!" %line
+
+
+def generate(apk):
+    if apk + '.keystore' in files:
+        print "%s exists!!!!" %apk
     else:
-        cmd = "keytool -genkey -alias abc.keystore -keyalg RSA -validity 20000 -keystore %s%s"%(keyPath, line)
+        cmd = "keytool -genkey -alias abc.keystore -keyalg RSA -validity 20000 -keystore %s%s"%(keyPath, apk + '.keystore')
         print cmd
         child = pexpect.spawn(cmd, logfile = sys.stdout)
 
@@ -109,5 +109,3 @@ for line in apkNameList:
             child.expect([pexpect.TIMEOUT, pexpect.EOF])
         except:
             print (str(child))
-
-        i+= 1

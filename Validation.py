@@ -1,5 +1,4 @@
 import commands
-apk = "com.gotv.nflgamecenter.us.lite"
 analysisResultPath = "/home/xueling/researchProjects/sourceDetection/tainAnalysis-newSource/"
 # analysisResultPath = "/Users/xueling/Downloads/"
 
@@ -11,15 +10,12 @@ temp = "/home/xueling/researchProjects/sourceDetection/temp"
 PII = {'utsaresearch2018@gmail.com', '757601f43fe6cab0', 'uuuu888'}
 
 methodPath = "/home/xueling/researchProjects/sourceDetection/methods/"
-method = methodPath + apk
-methods = list()
-for line in open(method).readlines():
-    methods.append(line.strip())
+
 
 
 validLeaksPath = "/home/xueling/researchProjects/sourceDetection/validLeaks/"
 
-leaks_org = open(analysisResultPath + apk).readlines()
+
 
 
 class SourceLine():             #flag: 1-toString, 0-resourceMethod, 2-sinkMethod
@@ -30,8 +26,15 @@ class SourceLine():             #flag: 1-toString, 0-resourceMethod, 2-sinkMetho
 
 list_SourceLine = list()
 
-def validation():
+def validation(apk):
             # get source
+    method = methodPath + apk
+    methods = list()
+    for line in open(method).readlines():
+        methods.append(line.strip())
+
+    leaks_org = open(analysisResultPath + apk).readlines()
+
     source_set = set()
     linesOfToString = list()
 
@@ -45,12 +48,12 @@ def validation():
             class_line.signature = sink
             class_line.flag = 2
             list_SourceLine.append(class_line)
-            # print "sink:  " + sink
+            print "sink:  " + sink
             continue
         elif '<' in line and '- - ' in line:         # line of source
             class_line = SourceLine(line, 0, 0)
             source = line.split('<')[1].split('>')[0]
-            # print "source:   " + source
+            print "source:   " + source
             sourceClass = source.split(':')[0]
             sourceMethod = source.split(':')[1].split(' ')[2].split('(')[0]
             # print 'sourceClass:   ' + sourceClass
@@ -64,18 +67,15 @@ def validation():
 
             else:                                 # new source
                 source_set.add(signature)
-                if checkToString(signature):              # check toString
+                if checkToString(signature, apk, methods):              # check toString
                     class_line.flag = 1
                 else:
                     class_line.flag = 0
             list_SourceLine.append(class_line)
 
-    # for item in list_SourceLine:
-    #     print item.line
-    #     print item.signature
-    #     print item.flag
 
-    removeFromLeaks(list_SourceLine)
+
+    removeFromLeaks(list_SourceLine, apk)
 
 
 # callSite checking
@@ -83,13 +83,12 @@ def validation():
             # # print "source_callSite " + source_callSite
 
 
-def checkToString(signatrue):   # check if there exists more than one invocation of this method with different value
+def checkToString(signatrue, apk, methods):   # check if there exists more than one invocation of this method with different value
     log = logPath + apk
-    print log
     if signatrue in methods:         # make sure its the new source we found
         cmd = 'grep ' + signatrue + ' ' + log + ' -B 1 > ' + temp
         commands.getoutput(cmd)
-        for line in open(temp).readlines():   # pronlem, interation on single char not line
+        for line in open(temp).readlines():
             if 'java.lang.Exception' not in line:
                 continue
             if any(x in line for x in PII):   #  value is PII
@@ -102,9 +101,12 @@ def checkToString(signatrue):   # check if there exists more than one invocation
         # print signatrue + ':    False'
         print "checking toString()................." + signatrue + '.........False'
         return False
+    else:
+        print "not new sources"
 
 
-def removeFromLeaks(list_SourceLine):   # remove the toString methods and count valid leaks
+
+def removeFromLeaks(list_SourceLine, apk):   # remove the toString methods and count valid leaks
     print "remove the toString() sources................"
     fw = open(validLeaksPath + apk, 'w')
     for item in list_SourceLine:
@@ -124,7 +126,6 @@ def removeFromLeaks(list_SourceLine):   # remove the toString methods and count 
         else:
             validLeakCount += 1
     print "after remove toString methods, found " + str(validLeakCount) + " valid leaks."
-validation()
 
 #
 # checkCallSite

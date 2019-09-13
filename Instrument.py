@@ -35,12 +35,12 @@ def instrument(method):
 
     if len(paraNumberList) > 0:
         parameterCount = max(paraNumberList) + 1
-    print "parameterCount: %d"%parameterCount
+    # print "parameterCount: %d"%parameterCount
 
-    print paraNumberList
+    # print paraNumberList
 
-    print parameterCount
-    print localsNumber
+    # print parameterCount
+    # print localsNumber
 
     if (16 - localsNumber - parameterCount) >= 1:
         locas_new = "    .locals " + str(localsNumber + 1)
@@ -166,9 +166,10 @@ def stringReturnDetection(apk):
 decodePath = "/home/xueling/researchProjects/sourceDetection/decodeFile/"
 files = os.listdir(rebuildApkPath)
 
-for apk in os.listdir(decodePath):
+def insertLog(apk):
     if apk + '.apk' in files:
-        print "exists!!!"
+        print apk + " has been rebuilt already!!!"
 
     else:
+        print 'instrumenting...............'
         stringReturnDetection(apk)
