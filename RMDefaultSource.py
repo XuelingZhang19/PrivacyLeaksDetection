@@ -9,7 +9,7 @@ newSource = open(signaturePath +apk).readlines();
 defultSource = open(SourceAndSinks_default).readlines();
 for source in newSource:
     if source in defultSource:
-        print source + "exists";
+        print source + "exists.....";
     else:
         print source
         fw.writelines(source)
