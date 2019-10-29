@@ -1,5 +1,7 @@
 import commands
-analysisResultPath = "/home/xueling/researchProjects/sourceDetection/tainAnalysis-newSource/"
+analysisResultPath = "/home/xueling/researchProjects/sourceDetection/taintAnalysis-result-context/"
+# analysisResultPath = "/home/xueling/researchProjects/sourceDetection/tainAnalysis-default/"
+
 # analysisResultPath = "/Users/xueling/Downloads/"
 
 logPath = "/home/xueling/researchProjects/sourceDetection/log/"
@@ -7,7 +9,7 @@ logPath = "/home/xueling/researchProjects/sourceDetection/log/"
 # log = "/Users/xueling/Downloads/temp.dms"
 temp = "/home/xueling/researchProjects/sourceDetection/temp"
 
-PII = {'utsaresearch2018@gmail.com', '757601f43fe6cab0', 'uuuu888'}
+PII = {'utsaresearch2018@gmail.com', '757601f43fe6cab0', 'uuuu888', 'a54eccb914c21863'}
 
 methodPath = "/home/xueling/researchProjects/sourceDetection/methods/"
 
@@ -48,29 +50,31 @@ def validation(apk):
             class_line.signature = sink
             class_line.flag = 2
             list_SourceLine.append(class_line)
-            print "sink:  " + sink
+            print "\n" + "sink:  " + sink
             continue
         elif '<' in line and '- - ' in line:         # line of source
             class_line = SourceLine(line, 0, 0)
             source = line.split('<')[1].split('>')[0]
+            invokeLocation = line.split(' on ')[1]
+            invokeLocation_class = invokeLocation.split(': ')[0].split('.')[-1] + '.java'
+            invokeLocation_lineNum = invokeLocation.split('line ')[1].split(' in method')[0]
             print "source:   " + source
-            sourceClass = source.split(':')[0]
-            sourceMethod = source.split(':')[1].split(' ')[2].split('(')[0]
-            # print 'sourceClass:   ' + sourceClass
-            # print 'sourceMethod:  ' + sourceMethod
-            signature = sourceClass + '.' + sourceMethod
-            class_line.signature = signature
-            if signature in source_set:           # source exists
-                for item in list_SourceLine:             # iterate all the line, and get the flag
-                    if item.signature == signature:
-                        class_line.flag = item.flag
-
-            else:                                 # new source
-                source_set.add(signature)
-                if checkToString(signature, apk, methods):              # check toString
-                    class_line.flag = 1
-                else:
-                    class_line.flag = 0
+            print "invokeLocation: " + invokeLocation_class + ':' + invokeLocation_lineNum
+            # sourceClass = source.split(':')[0]
+            # sourceMethod = source.split(':')[1].split(' ')[2].split('(')[0]
+            # signature = sourceClass + '.' + sourceMethod
+            # class_line.signature = signature
+            # if signature in source_set:           # source exists
+            #     for item in list_SourceLine:             # iterate all the line, and get the flag
+            #         if item.signature == signature:
+            #             class_line.flag = item.flag
+            #
+            # else:                                 # new source
+            #     source_set.add(signature)
+            #     if checkToString(signature, apk, methods):              # check toString
+            #         class_line.flag = 1
+            #     else:
+            #         class_line.flag = 0
             list_SourceLine.append(class_line)
 
 
@@ -95,6 +99,7 @@ def checkToString(signatrue, apk, methods):   # check if there exists more than 
                 # print "any works"
                 continue
             else:               # value has non-PII
+                print line
                 # print signatrue + ':    True'
                 print "checking toString()................." + signatrue + '........True'
                 return True

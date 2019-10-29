@@ -1,4 +1,5 @@
 import os
+import commands
 
 jar = "/home/xueling/researchProjects/soot-infoflow-cmd-jar-with-dependencies.jar"
 apk_orgPath = "/home/xueling/researchProjects/sourceDetection/apk_org/"
@@ -23,6 +24,10 @@ def analyze(apk, str):
         print cmd_taint_default
         os.system(cmd_taint_default)
 
+        grep_old = 'grep -i found ' + analysis_default + apk
+        print grep_old
+        print "Taint analysis resutl default source:"
+        print commands.getoutput(grep_old)
 
     elif str == 'newSources':
         print 'Taint analysis with default SourceAndSinks + new Sources...........'
@@ -38,8 +43,6 @@ def analyze(apk, str):
         fw.writelines(newSources)
         fw.close()
 
-
-
         cmd_taint_newSource = 'java -jar ' + jar + ' -a ' + apk_orgPath + apk + '.apk -p' + platformPath + ' -s ' + SourceAndSinks_newSources + ' > ' + analysis_newSources + apk + ' 2>&1'
         print cmd_taint_newSource
         os.system(cmd_taint_newSource)
@@ -47,3 +50,12 @@ def analyze(apk, str):
         cmd = 'rm ' + SourceAndSinks_newSources
         print cmd
         os.system(cmd)
+
+        print "Taint analysis resutl with new source: \n"
+        grep_new = 'grep -i found ' + analysis_newSources + apk
+        print grep_new
+        print commands.getoutput(grep_new)
+
+
+
+

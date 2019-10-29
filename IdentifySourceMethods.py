@@ -10,8 +10,12 @@ Email = "utsaresearch2018@gmail.com"
 AndroidID = "757601f43fe6cab0"
 AndroidID_new = 'a54eccb914c21863'
 PassWord = 'uuuu8888'
+UserName_1 = 'utsa'
+UserName_2 = 'UTSA'
+UserName_3 = 'Utsa'
 
-PII = (IMEI, Serial, Email, AndroidID, AndroidID_new, PassWord)
+
+PII = (IMEI, Serial, Email, AndroidID, AndroidID_new, PassWord, UserName_1, UserName_2,UserName_3)
 
 logPath = "/home/xueling/researchProjects/sourceDetection/log/"
 methodPath = "/home/xueling/researchProjects/sourceDetection/methods/"
@@ -21,6 +25,7 @@ def findMethod(log):
     setMethods = set()     # remove the duplicated methods from log
 
     flag = 0
+    count = 0
 
     fw = open(methodPath + log, 'a')
 
@@ -34,13 +39,16 @@ def findMethod(log):
                 continue
 
         if flag == 1:
-            if "W System.err: 	at" in line:
-                # print line
-                method = line.split("(")[0].split("W System.err: 	at ")[1]
-                # print method
-                setMethods.add(method)
-                flag = 0
+            if "W System.err: 	at" in line and count < 3:
+                print line
+                count += 1
+                # method = line.split("(")[0].split("W System.err: 	at ")[1]
+                # setMethods.add(method)
+                if count == 3:
+                    flag = 0
+                    count = 0
                 continue
+
             else:
                 print line
                 print "the next line is not correct"

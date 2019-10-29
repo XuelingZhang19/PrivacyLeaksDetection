@@ -27,7 +27,7 @@ def rebuild(apk):
     print 'rebuild apk.............'
     exists = os.listdir(rebuildApkPath)
     if apk + '.apk' in os.listdir(rebuildApkPath):
-        print "Exists!!!!"
+        print "rebuild Exists!!!!"
 
     else:
         # rebuild
